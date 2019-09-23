@@ -1,5 +1,5 @@
 {
-  "name": "julia-runtest",
+  "name": "julia-buildpkg",
   "version": "0.1.0",
   "private": true,
   "description": "Julia package test run action",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/julia-actions/julia-runtest.git"
+    "url": "git+https://github.com/julia-actions/julia-buildpkg.git"
   },
   "keywords": [
     "actions",
