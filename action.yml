@@ -1,6 +1,9 @@
 name: 'Run Pkg.build'
 description: 'Run the build step in a Julia package'
 author: 'David Anthoff'
+
 runs:
-  using: 'node12'
-  main: 'lib/main.js'
+  using: 'composite'
+  steps:
+    - run: julia --color=yes --project -e 'using Pkg; if VERSION >= v"1.1.0-rc1"; Pkg.build(verbose=true); else Pkg.build(); end'
+      shell: bash
