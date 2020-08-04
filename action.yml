@@ -2,6 +2,10 @@ name: 'Run Pkg.build'
 description: 'Run the build step in a Julia package'
 author: 'David Anthoff'
 
+branding:
+  icon: 'box'
+  color: 'gray-dark'
+
 runs:
   using: 'composite'
   steps:
