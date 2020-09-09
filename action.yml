@@ -9,10 +9,10 @@ branding:
 runs:
   using: 'composite'
   steps:
-    # A workaround to avoid delay after package registration. See also julia-runtest.
-    - run: julia --color=yes -e 'using Pkg; VERSION >= v"1.5-" && !isdir(joinpath(DEPOT_PATH[1], "registries", "General")) && Pkg.Registry.add("General")'
-      shell: bash
-      env:
-        JULIA_PKG_SERVER: ""
+  # A workaround to avoid delay after package registration. See also julia-runtest.
+  - run: julia --color=yes -e 'using Pkg; VERSION >= v"1.5-" && !isdir(joinpath(DEPOT_PATH[1], "registries", "General")) && Pkg.Registry.add("General")'
+    shell: bash
+    env:
+      JULIA_PKG_SERVER: ""
   - run: julia --color=yes --project -e 'using Pkg; if VERSION >= v"1.1.0-rc1"; Pkg.build(verbose=true); else Pkg.build(); end'
     shell: bash
