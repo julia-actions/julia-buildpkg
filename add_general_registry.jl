@@ -39,7 +39,7 @@ function main(; n = 10, max_delay = 120)
         retry(add_general_registry; delays = delays)()
         @info("Successfully added the General registry")
     catch ex
-        msg = "I was unable to added the General registry. However, the build will continue."
+        msg = "I was unable to add the General registry. However, the build will continue."
         @error(msg, exception=(ex,catch_backtrace()))
     end
 
