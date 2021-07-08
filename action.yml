@@ -6,6 +6,11 @@ branding:
   icon: 'box'
   color: 'gray-dark'
 
+inputs:
+  project:
+    description: 'Value passed to the --project flag. The default value is the repository root: "@."'
+    default: '@.'
+
 runs:
   using: 'composite'
   steps:
@@ -26,5 +31,5 @@ runs:
       # packages via `Pkg.test`.
       JULIA_PKG_SERVER: ""
 
-  - run: julia --color=yes --project -e 'using Pkg; if VERSION >= v"1.1.0-rc1"; Pkg.build(verbose=true); else Pkg.build(); end'
+  - run: julia --color=yes --project=${{ inputs.project }} -e 'using Pkg; if VERSION >= v"1.1.0-rc1"; Pkg.build(verbose=true); else Pkg.build(); end'
     shell: bash
