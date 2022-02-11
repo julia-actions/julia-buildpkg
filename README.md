@@ -26,10 +26,10 @@ jobs:
             julia-arch: x86
 
     steps:
-      - uses: actions/checkout@v1.0.0
-      - uses: julia-actions/setup-julia@latest
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.julia-version }}
-      - uses: julia-actions/julia-buildpkg@master
-      - uses: julia-actions/julia-runtest@master
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-runtest@v1
 ```
