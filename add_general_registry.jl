@@ -18,7 +18,7 @@ function general_registry_exists()
     if isfile(general_registry_tarball) && isfile(registry_toml_file)
         return true
     end
-    general_registry_dir, registry_toml_file = general_registry_location()
+    general_registry_dir, registry_toml_file = cloned_general_registry_location()
     if !isdir(general_registry_dir)
         return false
     elseif !isfile(registry_toml_file)
