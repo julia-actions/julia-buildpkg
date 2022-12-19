@@ -19,20 +19,20 @@ function general_registry_exists()
         return true
     end
     general_registry_dir, registry_toml_file = cloned_general_registry_location()
-    if !isdir(general_registry_dir)
-        return false
-    elseif !isfile(registry_toml_file)
-        return false
-    else
+    if isdir(general_registry_dir) && isfile(registry_toml_file)
         return true
+    else
+        return false
     end
 end
 
 function add_general_registry()
     @info("Attempting to clone the General registry")
+
     general_registry_tarball, registry_toml_file = tarball_general_registry_location()
     rm(general_registry_tarball; force = true, recursive = true)
     rm(registry_toml_file; force = true, recursive = true)
+
     general_registry_dir, registry_toml_file = cloned_general_registry_location()
     rm(general_registry_dir; force = true, recursive = true)
 
