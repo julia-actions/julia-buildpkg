@@ -43,7 +43,7 @@ function add_general_registry()
     # the request metadata to pkg.julialang.org when installing
     # packages via `Pkg.test`.
     pkg_server = get(ENV, "JULIA_PKG_SERVER", "")
-    withenv(ENV, "JULIA_PKG_SERVER" => pkg_server) do
+    withenv("JULIA_PKG_SERVER" => pkg_server) do
         Pkg.Registry.add("General")
     end
 
