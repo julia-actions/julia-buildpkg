@@ -30,8 +30,12 @@ end
 
 function add_general_registry()
     @info("Attempting to clone the General registry")
-    general_registry_dir, registry_toml_file = general_registry_location()
+    general_registry_tarball, registry_toml_file = tarball_general_registry_location()
+    rm(general_registry_tarball; force = true, recursive = true)
+    rm(registry_toml_file; force = true, recursive = true)
+    general_registry_dir, registry_toml_file = cloned_general_registry_location()
     rm(general_registry_dir; force = true, recursive = true)
+    
     Pkg.Registry.add("General")
     isfile(registry_toml_file) || throw(ErrorException("the Registry.toml file does not exist"))
     return nothing
