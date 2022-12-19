@@ -1,13 +1,24 @@
 using Pkg
 
-function general_registry_location()
+function tarball_general_registry_location()
+    reg_dir = joinpath(DEPOT_PATH[1], "registries")
+    general_registry_tarball = joinpath(reg_dir, "General.tar.gz")
+    registry_toml_file = joinpath(reg_dir, "General.toml")
+    return general_registry_tarball, registry_toml_file
+end
+
+function cloned_general_registry_location()
     general_registry_dir = joinpath(DEPOT_PATH[1], "registries", "General")
     registry_toml_file = joinpath(general_registry_dir, "Registry.toml")
     return general_registry_dir, registry_toml_file
 end
 
 function general_registry_exists()
-    general_registry_dir, registry_toml_file = general_registry_location()
+    general_registry_tarball, registry_toml_file = tarball_general_registry_location()
+    if isfile(general_registry_tarball) && isfile(registry_toml_file)
+        return true
+    end
+    general_registry_dir, registry_toml_file = cloned_general_registry_location()
     if !isdir(general_registry_dir)
         return false
     elseif !isfile(registry_toml_file)
