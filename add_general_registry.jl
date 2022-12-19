@@ -15,12 +15,12 @@ end
 
 function general_registry_exists()
     general_registry_tarball, registry_toml_file = tarball_general_registry_location()
-    @show general_registry_tarball, registry_toml_file
+    @show isfile(general_registry_tarball), isfile(registry_toml_file)
     if isfile(general_registry_tarball) && isfile(registry_toml_file)
         return true
     end
     general_registry_dir, registry_toml_file = cloned_general_registry_location()
-    @show general_registry_dir, registry_toml_file
+    @show isdir(general_registry_dir), isfile(registry_toml_file)
     if isdir(general_registry_dir) && isfile(registry_toml_file)
         return true
     end
