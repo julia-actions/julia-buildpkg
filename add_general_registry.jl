@@ -54,6 +54,8 @@ end
 function main(; n = 10, max_delay = 120)
     VERSION >= v"1.5-" || return
 
+    @show general_registry_exists()
+
     if general_registry_exists()
         @info("The General registry already exists locally")
         return
