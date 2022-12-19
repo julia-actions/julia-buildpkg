@@ -15,12 +15,11 @@ end
 
 function general_registry_exists()
     general_registry_tarball, registry_toml_file = tarball_general_registry_location()
-    @show isfile(general_registry_tarball), isfile(registry_toml_file)
     if isfile(general_registry_tarball) && isfile(registry_toml_file)
         return true
     end
+
     general_registry_dir, registry_toml_file = cloned_general_registry_location()
-    @show isdir(general_registry_dir), isfile(registry_toml_file)
     if isdir(general_registry_dir) && isfile(registry_toml_file)
         return true
     end
@@ -53,8 +52,6 @@ end
 
 function main(; n = 10, max_delay = 120)
     VERSION >= v"1.5-" || return
-
-    @show general_registry_exists()
 
     if general_registry_exists()
         @info("The General registry already exists locally")
