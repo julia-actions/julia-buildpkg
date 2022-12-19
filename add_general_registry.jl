@@ -36,15 +36,12 @@ function add_general_registry()
     general_registry_dir, registry_toml_file = cloned_general_registry_location()
     rm(general_registry_dir; force = true, recursive = true)
 
-    if !haskey(ENV, "JULIA_PKG_SERVER")
-        # If not already set, We set `JULIA_PKG_SERVER` to enforce
-        # `Pkg.Registry.add` to use Git.  This way, Pkg.jl can send
-        # the request metadata to pkg.julialang.org when installing
-        # packages via `Pkg.test`.
-        withenv("JULIA_PKG_SERVER" => "") do
-            Pkg.Registry.add("General")
-        end
-    else
+    # If not already set, We set `JULIA_PKG_SERVER` to enforce
+    # `Pkg.Registry.add` to use Git.  This way, Pkg.jl can send
+    # the request metadata to pkg.julialang.org when installing
+    # packages via `Pkg.test`.
+    pkg_server = get(ENV, "JULIA_PKG_SERVER", "")
+    withenv(ENV, "JULIA_PKG_SERVER" => pkg_server)
         Pkg.Registry.add("General")
     end
 
