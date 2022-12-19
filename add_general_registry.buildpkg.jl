@@ -28,7 +28,7 @@ function general_registry_exists()
 end
 
 function add_general_registry()
-    @info("Attempting to clone the General registry")
+    @info("Attempting to install the General registry")
 
     general_registry_tarball, registry_toml_file = tarball_general_registry_location()
     rm(general_registry_tarball; force = true, recursive = true)
