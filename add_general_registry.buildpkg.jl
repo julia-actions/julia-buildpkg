@@ -18,22 +18,35 @@ function general_registry_exists()
     if isfile(general_registry_tarball) && isfile(registry_toml_file)
         return true
     end
+
     general_registry_dir, registry_toml_file = cloned_general_registry_location()
-    if !isdir(general_registry_dir)
-        return false
-    elseif !isfile(registry_toml_file)
-        return false
-    else
+    if isdir(general_registry_dir) && isfile(registry_toml_file)
         return true
     end
+
+    return false
 end
 
 function add_general_registry()
-    @info("Attempting to clone the General registry")
-    general_registry_dir, registry_toml_file = general_registry_location()
+    @info("Attempting to install the General registry")
+
+    general_registry_tarball, registry_toml_file = tarball_general_registry_location()
+    rm(general_registry_tarball; force = true, recursive = true)
+    rm(registry_toml_file; force = true, recursive = true)
+
+    general_registry_dir, registry_toml_file = cloned_general_registry_location()
     rm(general_registry_dir; force = true, recursive = true)
-    Pkg.Registry.add("General")
-    isfile(registry_toml_file) || throw(ErrorException("the Registry.toml file does not exist"))
+
+    # If not already set, We set `JULIA_PKG_SERVER` to enforce
+    # `Pkg.Registry.add` to use Git.  This way, Pkg.jl can send
+    # the request metadata to pkg.julialang.org when installing
+    # packages via `Pkg.test`.
+    pkg_server = get(ENV, "JULIA_PKG_SERVER", "")
+    withenv("JULIA_PKG_SERVER" => pkg_server) do
+        Pkg.Registry.add("General")
+    end
+
+    general_registry_exists() || throw(ErrorException("The Registry was not intalled properly"))
     return nothing
 end
 
