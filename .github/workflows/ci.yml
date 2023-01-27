@@ -33,6 +33,9 @@ jobs:
         pkg-server:
           - ""
           - "pkg.julialang.org"
+        registry-flavor:
+          - "eager"
+          - "conservative"
         # 32-bit Julia binaries are not available on macOS
         exclude:
           - os: macOS-latest
@@ -72,6 +75,7 @@ jobs:
       - uses: ./.github/actions/julia-buildpkg
         env:
           JULIA_PKG_SERVER: ${{ matrix.pkg-server }}
+          JULIA_PKG_SERVER_REGISTRY_PREFERENCE: ${{ matrix.registry-flavor }}
 
       - uses: julia-actions/julia-runtest@v1
 
