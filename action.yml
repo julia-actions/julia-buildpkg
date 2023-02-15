@@ -21,6 +21,7 @@ runs:
   using: 'composite'
   steps:
   - run: |
+      import Pkg
       reg_pref = strip(get(ENV, "JULIA_PKG_SERVER_REGISTRY_PREFERENCE", "eager"))
       input = strip(get(ENV, "FOO", ""))
       if input == "yes"
@@ -36,13 +37,13 @@ runs:
               println(io, "JULIA_PKG_SERVER_REGISTRY_PREFERENCE=$(reg_pref)")
           end
       end
-    shell: julia --color=yes {0}
+      if VERSION >= v"1.1.0-rc1"
+      Pkg.build(verbose=true); else Pkg.build(); en
+    shell: julia --color=yes --project=${{ inputs.project }}
     env:
-      PROPAGATE_INPUT: '
+      PROPAGATE_INPUT: '${{ inputs.propagate_registry_preference }}'
     echo "{environment_variable_name}={value}" >> $GITHUB_ENV
-    if: inputs.project == 'yes'
-
-  - run: julia --color=yes --project=${{ inputs.project }} -e 'using Pkg; if VERSION >= v"1.1.0-rc1"; Pkg.build(verbose=true); else Pkg.build(); end'
+  - run:  -e 'using Pkg; d'
     shell: bash
     env:
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
