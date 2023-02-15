@@ -14,7 +14,7 @@ inputs:
     description: 'Whether to allow auto-precompilation (via the `JULIA_PKG_PRECOMPILE_AUTO` env var). Options: yes | no. Default value: no.'
     default: 'no'
   propagate_registry_preference:
-    description: 'Propagate the JULIA_PKG_SERVER_REGISTRY_PREFERENCE environment variable to all future steps'
+    description: 'Propagate the JULIA_PKG_SERVER_REGISTRY_PREFERENCE environment variable to future steps'
     default: 'yes'
 
 runs:
