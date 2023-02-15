@@ -35,6 +35,13 @@ runs:
           error(msg)
       end
       delete!(ENV, "PROPAGATE_INPUT");
+      Pkg.Registry.add("General")
+      Pkg.Registry.update()
+      if VERSION >= v"1.1.0-rc1"
+          Pkg.build(; verbose=true)
+      else
+          Pkg.build()
+      end
       if propagate
           # Set the JULIA_PKG_SERVER_REGISTRY_PREFERENCE environment variable
           # for future steps in this job.
@@ -43,13 +50,6 @@ runs:
           open(ENV["GITHUB_ENV"], "a") do io
               println(io, "$(pref_key)=$(pref_value)")
           end
-      end
-      Pkg.Registry.add("General")
-      Pkg.Registry.update()
-      if VERSION >= v"1.1.0-rc1"
-          Pkg.build(; verbose=true)
-      else
-          Pkg.build()
       end
     shell: julia --color=yes --project=${{ inputs.project }} {0}
     env:
