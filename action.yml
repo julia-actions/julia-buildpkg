@@ -44,6 +44,8 @@ runs:
               println(io, "$(pref_key)=$(pref_value)")
           end
       end
+      Pkg.Registry.add("General")
+      Pkg.Registry.update()
       if VERSION >= v"1.1.0-rc1"
           Pkg.build(; verbose=true)
       else
