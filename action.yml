@@ -23,27 +23,29 @@ runs:
   - run: |
       import Pkg
       reg_pref = strip(get(ENV, "JULIA_PKG_SERVER_REGISTRY_PREFERENCE", "eager"))
-      input = strip(get(ENV, "FOO", ""))
+      input = strip(get(ENV, "PROPAGATE_INPUT", ""))
       if input == "yes"
           propagate = true
-      elseif foo == "no"
+      elseif input == "no"
           propagate = false
       else
           msg = "Invalid value for the `propagate_registry_preference` input: $(input)"
           error(msg)
       end
-      if
+      if propagate
           open(ENV["GITHUB_ENV"], "a") do io
               println(io, "JULIA_PKG_SERVER_REGISTRY_PREFERENCE=$(reg_pref)")
           end
       end
       if VERSION >= v"1.1.0-rc1"
-      Pkg.build(verbose=true); else Pkg.build(); en
+          Pkg.build(; verbose=true)
+      else
+          Pkg.build()
+      end
     shell: julia --color=yes --project=${{ inputs.project }}
     env:
       PROPAGATE_INPUT: '${{ inputs.propagate_registry_preference }}'
     echo "{environment_variable_name}={value}" >> $GITHUB_ENV
-  - run:  -e 'using Pkg; d'
-    shell: bash
+  - run:  -e 'using 
     env:
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
