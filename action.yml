@@ -13,20 +13,34 @@ inputs:
   precompile:
     description: 'Whether to allow auto-precompilation (via the `JULIA_PKG_PRECOMPILE_AUTO` env var). Options: yes | no. Default value: no.'
     default: 'no'
+  propagate_registry_preference:
+    description: 'Propagate the JULIA_PKG_SERVER_REGISTRY_PREFERENCE environment variable to all future steps'
+    default: 'yes'
 
 runs:
   using: 'composite'
   steps:
-    # Occasionally, there are rather large delays (> a few hours)
-    # between the time a package is registered in General and
-    # propagated to pkg.julialang.org.  We can avoid this by manually
-    # cloning ~/.julia/registries/General/ in Julia 1.5 and later.
-    # See:
-    # * https://github.com/JuliaLang/Pkg.jl/issues/2011
-    # * https://github.com/JuliaRegistries/General/issues/16777
-    # * https://github.com/JuliaPackaging/PkgServer.jl/issues/60
-  - run: julia --color=yes "$GITHUB_ACTION_PATH"/add_general_registry.buildpkg.jl
-    shell: bash
+  - run: |
+      reg_pref = strip(get(ENV, "JULIA_PKG_SERVER_REGISTRY_PREFERENCE", "eager"))
+      input = strip(get(ENV, "FOO", ""))
+      if input == "yes"
+          propagate = true
+      elseif foo == "no"
+          propagate = false
+      else
+          msg = "Invalid value for the `propagate_registry_preference` input: $(input)"
+          error(msg)
+      end
+      if
+          open(ENV["GITHUB_ENV"], "a") do io
+              println(io, "JULIA_PKG_SERVER_REGISTRY_PREFERENCE=$(reg_pref)")
+          end
+      end
+    shell: julia --color=yes {0}
+    env:
+      PROPAGATE_INPUT: '
+    echo "{environment_variable_name}={value}" >> $GITHUB_ENV
+    if: inputs.project == 'yes'
 
   - run: julia --color=yes --project=${{ inputs.project }} -e 'using Pkg; if VERSION >= v"1.1.0-rc1"; Pkg.build(verbose=true); else Pkg.build(); end'
     shell: bash
