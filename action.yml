@@ -24,7 +24,8 @@ runs:
       import Pkg
       pref_key = "JULIA_PKG_SERVER_REGISTRY_PREFERENCE"
       pref_value = strip(get(ENV, pref_key, "eager"))
-      input = strip(get(ENV, "PROPAGATE_INPUT", ""))
+      ENV[pref_key] = pref_value
+      input = strip(ENV["PROPAGATE_INPUT"])
       if input == "yes"
           propagate = true
       elseif input == "no"
@@ -34,8 +35,11 @@ runs:
           error(msg)
       end
       delete!(ENV, "PROPAGATE_INPUT")
-      ENV[
       if propagate
+          # Set the JULIA_PKG_SERVER_REGISTRY_PREFERENCE environment variable
+          # for future steps in this job.
+          # Note: this will apply to the steps that run after
+          # the `- uses: julia-actions/julia-buildpkg` step.
           open(ENV["GITHUB_ENV"], "a") do io
               println(io, "$(pref_key)=$(pref_value)")
           end
