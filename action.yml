@@ -34,7 +34,7 @@ runs:
           msg = "Invalid value for the `propagate_registry_preference` input: $(input)"
           error(msg)
       end
-      delete!(ENV, "PROPAGATE_INPUT")
+      delete!(ENV, "PROPAGATE_INPUT");
       if propagate
           # Set the JULIA_PKG_SERVER_REGISTRY_PREFERENCE environment variable
           # for future steps in this job.
