@@ -18,7 +18,6 @@ runs:
   using: 'composite'
   steps:
   - run: |
-      isfile("deps/build.jl") || exit()
       import Pkg
       VERSION >= v"1.5-" && Pkg.Registry.add("General")
       VERSION >= v"1.1.0-rc1" ? Pkg.build(verbose=true) : Pkg.build()
