@@ -33,3 +33,13 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
 ```
+
+
+### Registry flavor preference
+
+This actions defines (and exports for subsequent steps of the workflow) the
+environmental variable `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` unless it
+is already set. If you want another registry flavor (i.e. `conservative`) this
+should be defined in the `env:` section of the relevant workflow or step. See
+[Registry flavors](https://pkgdocs.julialang.org/dev/registries/#Registry-flavors)
+for more information.
