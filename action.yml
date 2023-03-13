@@ -18,13 +18,11 @@ runs:
   using: 'composite'
   steps:
   - run: |
-      # Do nothing if no build file
       isfile("deps/build.jl") || exit()
-      # Use "eager" registry flavor by default
-      ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = get(ENV, "JULIA_PKG_SERVER_REGISTRY_PREFERENCE", "eager")
       import Pkg
       VERSION >= v"1.5-" && Pkg.Registry.add("General")
       VERSION >= v"1.1.0-rc1" ? Pkg.build(verbose=true) : Pkg.build()
     shell: julia --color=yes --project=${{ inputs.project }} {0}
     env:
+      JULIA_PKG_SERVER_REGISTRY_PREFERENCE: "${{ env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE == '' && 'eager' || env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE }}"
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
