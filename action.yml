@@ -23,7 +23,7 @@ runs:
   - run: |
       import Pkg
       VERSION >= v"1.5-" && Pkg.Registry.add("General")
-      VERSION >= v"1.1.0-rc1" ? Pkg.build(verbose=true) : Pkg.build()
+      VERSION >= v"1.1.0-rc1" ? retry(Pkg.build)(verbose=true) : retry(Pkg.build)()
     shell: julia --color=yes --project=${{ inputs.project }} {0}
     env:
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
