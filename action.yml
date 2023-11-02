@@ -13,6 +13,12 @@ inputs:
   precompile:
     description: 'Whether to allow auto-precompilation (via the `JULIA_PKG_PRECOMPILE_AUTO` env var). Options: yes | no. Default value: no.'
     default: 'no'
+  localregistry:
+    description: 'Add local registries hosted on GitHub. Speciefied by providing the url (https) to the repositories as a single-space seperated list'
+    default: ''
+  token:
+    description: 'GitHub Token used to acces the localregistries. Default: User GitHub token.'
+    default: ${{ github.token }}
 
 runs:
   using: 'composite'
@@ -23,7 +29,18 @@ runs:
   - run: |
       import Pkg
       VERSION >= v"1.5-" && Pkg.Registry.add("General")
+      
+      # If provided add local registries
+      if !isempty("${{ inputs.localregistry }}")
+        local_repos = split("${{ inputs.localregistry }}", " ") .|> string        
+        for url in local_repos
+          Pkg.Registry.add(Pkg.RegistrySpec(; url))
+        end
+      end
+      
       VERSION >= v"1.1.0-rc1" ? retry(Pkg.build)(verbose=true) : retry(Pkg.build)()
     shell: julia --color=yes --project=${{ inputs.project }} {0}
     env:
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
+      GITHUB_TOKEN: ${{ inputs.token }} # For authentication with GitHub Actions token
+      
