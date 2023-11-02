@@ -28,14 +28,16 @@ runs:
     shell: bash
   - run: |
       import Pkg
-      VERSION >= v"1.5-" && Pkg.Registry.add("General")
-      
-      # If provided add local registries
-      if !isempty("${{ inputs.localregistry }}")
-        local_repos = split("${{ inputs.localregistry }}", " ") .|> string        
-        for url in local_repos
-          Pkg.Registry.add(Pkg.RegistrySpec(; url))
-        end
+      if VERSION >= v"1.5-"
+          Pkg.Registry.add("General")
+        
+          # If provided add local registries
+          if !isempty("${{ inputs.localregistry }}")
+            local_repos = split("${{ inputs.localregistry }}", " ") .|> string        
+            for repo_url in local_repos
+              Pkg.Registry.add(Pkg.RegistrySpec(; url = repo_url))
+            end
+          end
       end
       
       VERSION >= v"1.1.0-rc1" ? retry(Pkg.build)(verbose=true) : retry(Pkg.build)()
