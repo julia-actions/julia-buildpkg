@@ -14,11 +14,13 @@ inputs:
     description: 'Whether to allow auto-precompilation (via the `JULIA_PKG_PRECOMPILE_AUTO` env var). Options: yes | no. Default value: no.'
     default: 'no'
   localregistry:
-    description: 'Add local registries hosted on GitHub. Speciefied by providing the url (https) to the repositories as a single-space seperated list'
+    description: 'Add local registries hosted on GitHub. Speciefied by providing the url (https/ssh) to the repositories as a newline (\n) seperated list.
+                  User is responsible for setting up the necessary SSH-Keys to access the repositories if necessary.'
     default: ''
-  token:
-    description: 'GitHub Token used to acces the localregistries. Default: User GitHub token.'
-    default: ${{ github.token }}
+  git_cli:
+    description: 'Determine if Pkg uses the cli git executable (Julia >= 1.7). Might be necessary for more complicated SSH setups.
+                  Options: true | false. Default : false'
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -28,13 +30,18 @@ runs:
     shell: bash
   - run: |
       import Pkg
+      
+      # Determine if Pkg uses git-cli executable instead of LibGit2
+      VERSION >= v"1.7-" && (ENV["JULIA_PKG_USE_CLI_GIT"] = ${{ inputs.git_cli }})
+
       if VERSION >= v"1.5-"
           Pkg.Registry.add("General")
-        
+
           # If provided add local registries
           if !isempty("${{ inputs.localregistry }}")
-            local_repos = split("${{ inputs.localregistry }}", " ") .|> string        
+            local_repos = split("${{ inputs.localregistry }}", "\n") .|> string   
             for repo_url in local_repos
+              isempty(repo_url) && continue
               Pkg.Registry.add(Pkg.RegistrySpec(; url = repo_url))
             end
           end
@@ -44,5 +51,4 @@ runs:
     shell: julia --color=yes --project=${{ inputs.project }} {0}
     env:
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
-      GITHUB_TOKEN: ${{ inputs.token }} # For authentication with GitHub Actions token
-      
+      GITHUB_TOKEN: ${{ github.token }}
