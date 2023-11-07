@@ -34,6 +34,11 @@ runs:
       # Determine if Pkg uses git-cli executable instead of LibGit2
       VERSION >= v"1.7-" && (ENV["JULIA_PKG_USE_CLI_GIT"] = ${{ inputs.git_cli }})
 
+      if VERSION < v"1.7-" && ${{ inputs.git_cli }} == true
+        printstyled("JULIA_PKG_USE_CLI_GIT requires Julia >= 1.7. Using default LibGit2 git-interface instead! \n"; color = :yellow)
+      end
+
+
       if VERSION >= v"1.5-"
           Pkg.Registry.add("General")
 
