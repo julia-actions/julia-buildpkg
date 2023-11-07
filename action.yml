@@ -14,7 +14,7 @@ inputs:
     description: 'Whether to allow auto-precompilation (via the `JULIA_PKG_PRECOMPILE_AUTO` env var). Options: yes | no. Default value: no.'
     default: 'no'
   localregistry:
-    description: 'Add local registries hosted on GitHub. Speciefied by providing the url (https/ssh) to the repositories as a newline (\n) seperated list.
+    description: 'Add local registries hosted on GitHub. Specified by providing the url (https/ssh) to the repositories as a newline (\n) seperated list.
                   User is responsible for setting up the necessary SSH-Keys to access the repositories if necessary.'
     default: ''
   git_cli:
