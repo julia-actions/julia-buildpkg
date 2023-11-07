@@ -59,7 +59,7 @@ If the registry contains private packages, or is itself private, the ssh protoco
           ssh-private-key: |
             ${{ secrets.PRIVATE_DEPLOY_KEY }}
             ${{ secrets.PRIVATE_DEPLOY_KEY2 }}
-      - uses: julia-actions/julia-buildpkg@main # Update @main once new taged version available
+      - uses: julia-actions/julia-buildpkg@v1
         with:
           localregistry: |
             https://github.com/username/PersonalRegistry.git
