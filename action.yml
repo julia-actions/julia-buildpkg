@@ -70,4 +70,4 @@ runs:
     env:
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
       GITHUB_TOKEN: "${{ github.token }}"
-      INPUT_GIT_CLI: "${{ inputs.git_cli }})"
+      INPUT_GIT_CLI: "${{ inputs.git_cli }}"
