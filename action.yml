@@ -47,7 +47,7 @@ runs:
         # `true` or `false`.
         INPUT_GIT_CLI_b = parse(Bool, INPUT_GIT_CLI_str)
         ENV["JULIA_PKG_USE_CLI_GIT"] = "$(INPUT_GIT_CLI_b)"
-        if VERSION < v"1.7-"
+        if (VERSION < v"1.7-") && INPUT_GIT_CLI_b
           printstyled("::notice::JULIA_PKG_USE_CLI_GIT requires Julia >= 1.7. Using default LibGit2 git-interface instead! \n"; color = :yellow)
         end
       end
