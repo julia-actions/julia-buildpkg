@@ -39,7 +39,7 @@ runs:
       # If the user does not provide the `git_cli` input, we want to make sure
       # that we respect any pre-existing value of the `JULIA_PKG_USE_CLI_GIT`
       # environment variable.
-      INPUT_GIT_CLI_str = strip(ENV["INPUT_GIT_CLI"]))
+      INPUT_GIT_CLI_str = strip(ENV["INPUT_GIT_CLI"])
       if isempty(INPUT_GIT_CLI_str)
         # Empty = user did not provide this input = we should do nothing.
       else
