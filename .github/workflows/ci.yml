@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout Example.jl
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: julia-actions/Example.jl
 
@@ -49,7 +49,7 @@ jobs:
         shell: bash
 
       - name: Checkout julia-buildpkg
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: ./.github/actions/julia-buildpkg
 
