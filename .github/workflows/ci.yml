@@ -70,6 +70,8 @@ jobs:
             ${{ runner.os }}-
 
       - uses: ./.github/actions/julia-buildpkg
+        with:
+          ignore-no-cache: true
         env:
           JULIA_PKG_SERVER: ${{ matrix.pkg-server }}
 
