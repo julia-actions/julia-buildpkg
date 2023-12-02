@@ -22,7 +22,7 @@ inputs:
                   Options: true | false. Default : false'
     default: 'false'
   ignore-no-cache:
-    description: 'Whether to ignore if there appears to be no depot caching. Silences an action warning.'
+    description: 'Whether to ignore if there appears to be no depot caching. Silences an action notice recommending `julia-actions/cache`.'
     default: 'false'
 
 runs:
