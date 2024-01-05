@@ -33,7 +33,7 @@ runs:
     shell: bash
   - run: |
       if "${{ inputs.ignore-no-cache }}" == "false" && !isdir(DEPOT_PATH[1])
-          println("::notice title=[julia-buildpkg] Caching of the `~/.julia` depot was not detected ::Consider using `julia-actions/cache` to speed up runs https://github.com/julia-actions/cache. To ignore, set input `ignore-no-cache: true` ")
+          println("::notice title=[julia-buildpkg] Caching of the julia depot was not detected ::Consider using `julia-actions/cache` to speed up runs https://github.com/julia-actions/cache. To ignore, set input `ignore-no-cache: true` ")
       end
       import Pkg
 
