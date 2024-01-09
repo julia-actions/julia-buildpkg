@@ -58,8 +58,8 @@ runs:
           end
 
           # If provided add local registries
-          if !isempty("${{ inputs.localregistry }}")
-              local_repos = split("${{ inputs.localregistry }}", "\n"; keepempty=false) .|> string
+          if !isempty(ENV["LOCAL_REGISTRY"])
+              local_repos = split(ENV["LOCAL_REGISTRY"], "\n"; keepempty=false) .|> string
               for repo_url in local_repos
                   # https://github.com/JuliaLang/Pkg.jl/issues/3753
                   if !any(r -> r.repo == repo_url, reachable_registries())
@@ -74,3 +74,4 @@ runs:
     env:
       JULIA_PKG_PRECOMPILE_AUTO: "${{ inputs.precompile }}"
       GITHUB_TOKEN: ${{ github.token }}
+      LOCAL_REGISTRY: ${{ inputs.localregistry }}
