@@ -44,9 +44,16 @@ runs:
           printstyled("::notice::JULIA_PKG_USE_CLI_GIT requires Julia >= 1.7. Using default LibGit2 git-interface instead! \n"; color = :yellow)
       end
 
-
       if VERSION >= v"1.5-"
-          if !any(r -> r.name == "General", Pkg.Registry.reachable_registries())
+          function reachable_registries()
+              return if VERSION >= v"1.7-"
+                  Pkg.Registry.reachable_registries()
+              else
+                  [(; name=r.name, repo=r.url) for r in Pkg.Types.collect_registries()]
+              end
+          end
+
+          if !any(r -> r.name == "General", reachable_registries())
               Pkg.Registry.add("General")
           end
 
@@ -55,7 +62,7 @@ runs:
               local_repos = split("${{ inputs.localregistry }}", "\n"; keepempty=false) .|> string
               for repo_url in local_repos
                   # https://github.com/JuliaLang/Pkg.jl/issues/3753
-                  if !any(r -> r.repo == repo_url, Pkg.Registry.reachable_registries())
+                  if !any(r -> r.repo == repo_url, reachable_registries())
                       Pkg.Registry.add(Pkg.RegistrySpec(; url = repo_url))
                   end
               end
