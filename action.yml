@@ -46,14 +46,19 @@ runs:
 
 
       if VERSION >= v"1.5-"
-          Pkg.Registry.add("General")
+          if !any(r -> r.name == "General", Pkg.Registry.reachable_registries())
+            Pkg.Registry.add("General")
+          end
 
           # If provided add local registries
           if !isempty("${{ inputs.localregistry }}")
             local_repos = split("${{ inputs.localregistry }}", "\n") .|> string
             for repo_url in local_repos
               isempty(repo_url) && continue
-              Pkg.Registry.add(Pkg.RegistrySpec(; url = repo_url))
+              # https://github.com/JuliaLang/Pkg.jl/issues/3753
+              if !any(r -> r.repo == repo_url, Pkg.Registry.reachable_registries())
+                Pkg.Registry.add(Pkg.RegistrySpec(; url = repo_url))
+              end
             end
           end
       end
