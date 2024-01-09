@@ -21,6 +21,7 @@ jobs:
       matrix:
         version:
           - "1.0"
+          - "1.6" # Long-term support (LTS) release of Julia
           - "1" # automatically expands to the latest stable 1.x release of Julia
           - nightly
         os:
@@ -61,8 +62,21 @@ jobs:
       - uses: ./.github/actions/julia-buildpkg
         with:
           ignore-no-cache: true
+          localregistry: |
+            https://github.com/JuliaRegistries/General.git
         env:
           JULIA_PKG_SERVER: ${{ matrix.pkg-server }}
+
+      # When using the Pkg server the `Pkg.Registry.add("General")` will add the General registry
+      # via Pkg servers. Using `localregistry` to clone the General registry via HTTPS should be
+      # skipped.
+      - name: Test skipping registry cloning of duplicate repos
+        if: ${{ matrix.pkg-server == 'pkg.julialang.org' }}
+        shell: bash
+        run: |
+          if julia -e 'VERSION >= v"1.7-" || exit(1)'; then
+              ! test -d $HOME/.julia/registries/General
+          fi
 
       - uses: julia-actions/julia-runtest@v1
 
