@@ -52,9 +52,8 @@ runs:
 
           # If provided add local registries
           if !isempty("${{ inputs.localregistry }}")
-              local_repos = split("${{ inputs.localregistry }}", "\n") .|> string
+              local_repos = split("${{ inputs.localregistry }}", "\n"; keepempty=false) .|> string
               for repo_url in local_repos
-                  isempty(repo_url) && continue
                   # https://github.com/JuliaLang/Pkg.jl/issues/3753
                   if !any(r -> r.repo == repo_url, Pkg.Registry.reachable_registries())
                       Pkg.Registry.add(Pkg.RegistrySpec(; url = repo_url))
