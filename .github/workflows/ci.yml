@@ -33,10 +33,15 @@ jobs:
         pkg-server:
           - ""
           - "pkg.julialang.org"
-        # 32-bit Julia binaries are not available on macOS
         exclude:
+          # 32-bit Julia binaries are not available on macOS
           - os: macOS-latest
             arch: x86
+          # Only Julia 1.7+ can use the package server
+          - version: "1.0"
+            pkg-server: "pkg.julialang.org"
+          - version: "1.6"
+            pkg-server: "pkg.julialang.org"
 
     steps:
       - name: Checkout Example.jl
@@ -73,9 +78,7 @@ jobs:
         if: ${{ matrix.pkg-server == 'pkg.julialang.org' }}
         shell: bash
         run: |
-          if julia -e 'VERSION >= v"1.7-" || exit(1)'; then
-              ! test -d $HOME/.julia/registries/General
-          fi
+          ! test -d $HOME/.julia/registries/General
 
       - uses: julia-actions/julia-runtest@v1
 
