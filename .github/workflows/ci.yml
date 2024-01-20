@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - "main"
-      - "master"
     paths-ignore:
       - "README.md"
       - "LICENSE"
@@ -17,10 +16,11 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: ${{ github.event_name == 'pull_request' }}
       matrix:
         version:
           - "1.0"
+          - "1.6" # Long-term support (LTS) release of Julia
           - "1" # automatically expands to the latest stable 1.x release of Julia
           - nightly
         os:
@@ -33,10 +33,15 @@ jobs:
         pkg-server:
           - ""
           - "pkg.julialang.org"
-        # 32-bit Julia binaries are not available on macOS
         exclude:
+          # 32-bit Julia binaries are not available on macOS
           - os: macOS-latest
             arch: x86
+          # Only Julia 1.7+ can use the package server
+          - version: "1.0"
+            pkg-server: "pkg.julialang.org"
+          - version: "1.6"
+            pkg-server: "pkg.julialang.org"
 
     steps:
       - name: Checkout Example.jl
@@ -61,8 +66,19 @@ jobs:
       - uses: ./.github/actions/julia-buildpkg
         with:
           ignore-no-cache: true
+          localregistry: |
+            https://github.com/JuliaRegistries/General.git
         env:
           JULIA_PKG_SERVER: ${{ matrix.pkg-server }}
+
+      # When using the Pkg server the `Pkg.Registry.add("General")` will add the General registry
+      # via Pkg servers. Using `localregistry` to clone the General registry via HTTPS should be
+      # skipped.
+      - name: Test skipping registry cloning of duplicate repos
+        if: ${{ matrix.pkg-server == 'pkg.julialang.org' }}
+        shell: bash
+        run: |
+          ! test -d $HOME/.julia/registries/General
 
       - uses: julia-actions/julia-runtest@v1
 
