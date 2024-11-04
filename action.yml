@@ -46,7 +46,12 @@ runs:
 
 
       if VERSION >= v"1.5-"
-          Pkg.Registry.add("General")
+          if VERSION >= v"1.8-"
+              # Install the default registries
+              Pkg.Registry.add()
+          else
+              Pkg.Registry.add("General")
+          end
 
           # If provided add local registries
           if !isempty("${{ inputs.localregistry }}")
