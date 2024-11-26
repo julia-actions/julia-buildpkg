@@ -70,7 +70,7 @@ jobs:
 
       - uses: codecov/codecov-action@v5
         with:
-          file: lcov.info
+          files: lcov.info
 
       - name: Verify that test output file exists
         run: test -f "$HOME/julia-buildpkg"
